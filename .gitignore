@@ -1,0 +1,4 @@
+pdf_env/
+venv/
+*.pdf
+__pycache__/
