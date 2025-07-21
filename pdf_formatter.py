@@ -63,10 +63,11 @@ class ExamReformatter:
         cell_width = (self.page_width - 2 * self.margin) / self.grid_cols
         cell_height = (self.page_height - 2 * self.margin) / self.grid_rows
         
-        # Add title if provided
+        # Add title if provided (also make this smaller)
         if title:
-            c.setFont("Helvetica-Bold", 14)
-            c.drawString(self.margin, self.page_height - 20, title)
+            c.setFont("Helvetica", 6)
+            c.setFillColorRGB(0.7, 0.7, 0.7)  # Light gray
+            c.drawString(self.margin, self.page_height - 10, title)
         
         pdf_document = fitz.open(self.input_pdf)
         has_content = False
@@ -87,11 +88,11 @@ class ExamReformatter:
             c.setLineWidth(0.5)
             c.rect(x, y, cell_width, cell_height, stroke=1, fill=0)
             
-            # Add exam number label
-            c.setFont("Helvetica-Bold", 10)
-            c.setFillColorRGB(0, 0, 0)
-            label_height = 15
-            c.drawString(x + 5, y + cell_height - label_height, f"Exam {exam_num} - Page {page_idx - self.exams[exam_num][0] + 1}")
+            # Add exam number label - MUCH SMALLER
+            c.setFont("Helvetica", 5)  # Tiny font
+            c.setFillColorRGB(0.7, 0.7, 0.7)  # Light gray text
+            label_height = 8  # Much smaller label space
+            c.drawString(x + 2, y + cell_height - label_height + 2, f"E{exam_num}-P{page_idx - self.exams[exam_num][0] + 1}")
             
             # Convert PDF page to image
             has_content = True
@@ -107,7 +108,7 @@ class ExamReformatter:
                 img_file.write(img_data)
             
             try:
-                # Draw image filling the entire cell (minus label space)
+                # Draw image filling the entire cell (minus tiny label space)
                 # No padding - use full cell space
                 img_x = x + 1  # 1 point border
                 img_y = y + 1
